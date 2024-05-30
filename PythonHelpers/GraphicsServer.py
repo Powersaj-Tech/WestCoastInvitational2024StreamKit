@@ -3,16 +3,22 @@ from flask import Flask, jsonify
 from flask_socketio import SocketIO, emit
 from flask_cors import CORS
 import eventlet
+import random
+import time
 
 app = Flask(__name__)
 CORS(app)  # Enable CORS on all routes
 socketio = SocketIO(app, cors_allowed_origins="*")
+
+tps = 60
 
 active_message = "Initial message"
 counter = 0
 VolPosition = "VolPosition"
 VolName = "VolName"
 VolTeamNum = "VolTeamNum"
+TeamNum = "TeamNum"
+countdowntime = time.time() + 1210
 
 names = {
     "1": "Volunteer Name 1",
@@ -54,19 +60,22 @@ def background_thread():  # test function that updates the text every ms
     global VolPosition, VolName, VolTeamNum
     while True:
         #socketio.sleep(0.001) #1ms
-        socketio.sleep(1 / 30)
+        socketio.sleep(2 / tps)
         counter += 1
-        socketio.emit('active_message', {'message': 'Webhook Updates: ' + str(counter) + ' Server Interval: 30tps'},
-                      namespace='/GetActiveMessage')
-        if counter % 40 == 0:
+        countdown = countdowntime - time.time()
+        minutes = str(int(countdown / 60))
+        seconds = int(countdown % 60)
+        if seconds < 10:
+            seconds = "0" + str(seconds)
+        else:
+            seconds = str(seconds)
+        socketio.emit('active_message', {'message': minutes + ":" + seconds}, namespace='/GetActiveMessage')
+        if counter % tps == 0:
             VolPosition, VolName, VolTeamNum = getPerson()
             socketio.emit('active_vols', {'VolPosition': VolName, 'VolName': VolPosition, 'VolTeamNum': VolTeamNum},
                           namespace='/GetActiveVols')
-
-
-@socketio.on('connect', namespace='/GetActiveMessage')
-def get_active_message():
-    emit('active_message', {'message': active_message})
+            socketio.emit('active_team', {'TeamNumber': str(random.randint(10000, 60000))},
+                          namespace='/GetActiveTeam')
 
 
 @app.route('/UpdateMessageCall/<msg>')
@@ -89,9 +98,30 @@ def update_vol_position_call(pos, name, team):
                     'VolTeamNum': VolTeamNum})
 
 
+@app.route('/UpdateTeamNumberCall/<team>')
+def update_team_number_call(team):
+    global TeamNum
+    TeamNum = team
+    socketio.emit('active_team', {'TeamNumber': TeamNum}, namespace='/GetActiveTeam')
+    return jsonify({'result': 'Team Number updated', 'TeamNumber': TeamNum})
+
+
+@socketio.on('connect', namespace='/GetActiveMessage')
+def get_active_message():
+    print('connected to /GetActiveMessage')
+    emit('active_message', {'message': active_message})
+
+
 @socketio.on('connect', namespace='/GetActiveVols')
 def get_active_vols():
+    print('connected to /GetActiveVols')
     emit('active_vols', {'VolPosition': VolPosition, 'VolName': VolName, 'VolTeamNum': VolTeamNum})
+
+
+@socketio.on('connect', namespace='/GetActiveTeam')
+def get_active_team():
+    print('connected to /GetActiveTeam')
+    emit('active_team', {'TeamNumber': TeamNum})
 
 
 if __name__ == '__main__':
