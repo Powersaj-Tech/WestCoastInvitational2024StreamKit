@@ -1,0 +1,43 @@
+<link rel="stylesheet" href="https://use.typekit.net/kof0jzy.css">
+
+<!-- width 1483, height 98 -->
+<style>
+  body {
+    font-family: "articulat-cf", sans-serif;
+    font-weight: 700;
+    font-style: normal;
+    font-size: 24px;
+  }
+
+  .box {
+    width: 1483px;
+    height: 98px;
+    transform: scale(1);
+    transform-origin: top left;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+</style>
+<body>
+  <div class="box">
+    <h1>deftext</h1>
+  </div>
+
+  <script>
+    document.querySelector('.box h1').textContent = 'Loading...';
+    
+    async function fetchData() {
+      try {
+        const response = await fetch('http://localhost:44444/get');
+        const data = await response.text();
+        document.querySelector('.box h1').textContent = data;
+      } catch (error) {
+        document.querySelector('.box h1').textContent = 'Error: ' + error.message;
+      }
+    }
+    
+    fetchData();
+    setInterval(fetchData, 150);
+  </script>
+</body>

@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<html><head><meta charset="utf-8"></head><head><script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.9.1/gsap.min.js"></script>
+
+  <title>SVG Display</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      overflow: hidden;
+    }
+    svg {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+    }
+    </style>
+</head>
+<body><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="1920" height="1080" viewBox="0 0 1920 1080"><defs><style>.a{fill:#fff;stroke:#707070;}.b{clip-path:url(#a);}.c{fill:#043d46;}.d{fill:#065d6a;}.e{fill:#016286;}.f{fill:#078cbd;}.g{fill:#29b4dd;}</style><clipPath id="a"><rect class="a" width="1920" height="1080"></rect></clipPath></defs><g class="b"><path class="c" d="M0,74.7S407.447-33.6,736.529,10.6c222.13,29.837,406.258,68.518,571.422,269.738,85.72,104.433,22.36-266.444,177.265-27.9s77.834,564.034,77.834,564.034-176.342-248.028-398.815-257.694-162.3,177.9-179.073,374.909c-15.168,178.166,38.579,253.682,322.89,244.644,155.773-4.952,414.829-191.744,556.469-174.19,192.347,23.839,336.581,303.048,336.581,303.048v491.475H0Z" transform="matrix(0.951, 0.309, -0.309, 0.951, 27.355, -660.157)"></path><path class="d" d="M0-297.664s407.447-108.3,736.529-64.094c192.842,25.9,540.778,12.017,699.658,216.854s58.851,589.174,58.851,589.174S844.7,47.146,809.762,457.588c-15.168,178.166,213.979,357.418,498.29,348.38,155.773-4.952,414.829-191.744,556.469-174.19C2056.868,655.617,2201.1,934.826,2201.1,934.826V1426.3H0Z" transform="translate(-58.681 -97.039)"></path><path class="e" d="M0-30.138S820.183-242.2,1149.265-198c153.681,20.643,284.607,73.8,480.076,241.889s34.77,523.2,34.77,523.2-59.309-150.344-333.3-227.138c-352.6-98.826-796.537-125.168-719.526,302.531,28.96,160.835,202.5,338.027,427.585,431.131,197.7,81.78,446.053,90.71,521.527,69.4,160.926-45.429,201.545-38.373,365.689-157.646C2078.25,874.808,2183.423,760.7,2183.423,760.7l17.68,933.125H0Z" transform="translate(-128.892 -399.671)"></path><path class="f" d="M0-153.446,779.837-429.807,1291.8-382.078s-497.7,5.447-710.586,198.766C330.1,44.722,250.677,441.032,508.626,779.241c229.462,300.859,643.457,331.495,838.509,299.8s478.88-132.165,561.286-139.566c254.934-22.9,292.683,139.566,292.683,139.566v491.474H0Z" transform="translate(-163.997 -276.362)"></path><path class="g" d="M0-298.637s137.7-91.063,160.157,0C221.184-51.166,130.995,474.929,721.99,786.817S1728.6,685.016,1907.839,677.874c189.926-7.568,293.265,173.472,293.265,173.472V1342.82H0Z" transform="translate(-163.997 11.016)"></path></g></svg>
+<script>
+    gsap.to('.g', {
+      y: `-1%`,
+      repeat: -1,
+      yoyo: true,
+      duration: 2,
+      delay: 0,
+      ease: "sine.inOut"
+    });
+    gsap.to('.f', {
+      y: `-15%`,
+      repeat: -1,
+      yoyo: true,
+      duration: 2,
+      delay: 0.5,
+      ease: "sine.inOut"
+    });
+    gsap.to('.e', {
+      y: `-22%`,
+      repeat: -1,
+      yoyo: true,
+      duration: 2,
+      delay: 1,
+      ease: "sine.inOut"
+    });
+    gsap.to('.d', {
+      y: `-8%`,
+      repeat: -1,
+      yoyo: true,
+      duration: 2,
+      delay: 1.5,
+      ease: "sine.inOut"
+    });
+    gsap.to('.c', {
+      y: `-40%`,
+      repeat: -1,
+      yoyo: true,
+      duration: 2,
+      delay: 2,
+      ease: "sine.inOut"
+    });
+  </script>
+</body></html>
