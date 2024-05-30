@@ -24,19 +24,23 @@
     <h1>deftext</h1>
   </div>
 
-  <script>
-    document.querySelector('.box h1').textContent = 'Loading...';
-    
-    async function fetchData() {
-      try {
-        const response = await fetch('http://localhost:44444/GetActiveMessage');
-        document.querySelector('.box h1').textContent = await response.text();
-      } catch (error) {
-        document.querySelector('.box h1').textContent = 'Error: ' + error.message + ' (is the bannerbox server running?)';
-      }
-    }
-    
-    fetchData();
-    setInterval(fetchData, 250);
-  </script>
+<script src="https://cdn.socket.io/4.2.0/socket.io.min.js"></script>
+<script>
+    window.onload = function() {
+    var socket = io.connect('http://localhost:4444/GetActiveMessage');
+
+    socket.on('connect', function() {
+        console.log('Connected to server');
+    });
+
+    socket.on('active_message', function(data) {
+        // python returns {"message": currentmsg}
+        document.querySelector('h1').innerText = data.message;
+    });
+
+    socket.on('disconnect', function() {
+        console.log('Disconnected from server');
+    });
+};
+</script>
 </body>

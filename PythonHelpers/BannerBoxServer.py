@@ -1,23 +1,40 @@
-from flask import Flask
+from flask import Flask, jsonify
+from flask_socketio import SocketIO, emit
 from flask_cors import CORS
-
-# pip install flask-cors
-# pip install Flask
+import eventlet
 
 app = Flask(__name__)
-CORS(app)  # This will enable CORS for all routes
+CORS(app)  # Enable CORS on all routes
+socketio = SocketIO(app, cors_allowed_origins="*")
 
-currentmsg = "Default Server Message"
+active_message = "Initial message"
+counter = 0
 
-@app.route('/GetActiveMessage')
-def get_data():
-    return currentmsg
 
-@app.route('/UpdateMessageCall/<data>')
-def post_data(data):
-    global currentmsg
-    currentmsg = data
-    return f"Received message: {data}"
+def background_thread():  # test function that updates the text every ms
+    global counter
+    while True:
+        socketio.sleep(0.001)
+        counter += 1
+        socketio.emit('active_message', {'message': 'Server Call Counter: ' + str(counter) + ' Server Interval: 1ms'},
+                      namespace='/GetActiveMessage')
+
+
+@app.route('/UpdateMessageCall/<msg>')
+def update_message_call(msg):
+    global active_message
+    active_message = msg
+    socketio.emit('active_message', {'message': active_message}, namespace='/GetActiveMessage')
+    print("Message updated: " + active_message)
+    return jsonify({'result': 'Message updated', 'message': active_message})
+
+
+@socketio.on('connect', namespace='/GetActiveMessage')
+def get_active_message():
+    print("Client connected")
+    emit('active_message', {'message': active_message})
+
 
 if __name__ == '__main__':
-    app.run(port=44444, debug=False)
+    socketio.start_background_task(background_thread)
+    socketio.run(app, port=4444)
