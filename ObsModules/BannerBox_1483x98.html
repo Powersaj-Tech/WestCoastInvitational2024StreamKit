@@ -1,6 +1,6 @@
-<link rel="stylesheet" href="https://use.typekit.net/kof0jzy.css">
-
 <!-- width 1483, height 98 -->
+
+<link rel="stylesheet" href="https://use.typekit.net/kof0jzy.css"> <!-- font-family: "articulat-cf", linked to adobe fonts. -->
 <style>
   body {
     font-family: "articulat-cf", sans-serif;
@@ -30,10 +30,9 @@
     async function fetchData() {
       try {
         const response = await fetch('http://localhost:44444/get');
-        const data = await response.text();
-        document.querySelector('.box h1').textContent = data;
+        document.querySelector('.box h1').textContent = await response.text();
       } catch (error) {
-        document.querySelector('.box h1').textContent = 'Error: ' + error.message;
+        document.querySelector('.box h1').textContent = 'Error: ' + error.message + ' (is the bannerbox server running?)';
       }
     }
     
