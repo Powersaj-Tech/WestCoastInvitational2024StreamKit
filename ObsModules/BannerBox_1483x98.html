@@ -29,7 +29,7 @@
     
     async function fetchData() {
       try {
-        const response = await fetch('http://localhost:44444/get');
+        const response = await fetch('http://localhost:44444/GetActiveMessage');
         document.querySelector('.box h1').textContent = await response.text();
       } catch (error) {
         document.querySelector('.box h1').textContent = 'Error: ' + error.message + ' (is the bannerbox server running?)';
@@ -37,6 +37,6 @@
     }
     
     fetchData();
-    setInterval(fetchData, 150);
+    setInterval(fetchData, 250);
   </script>
 </body>

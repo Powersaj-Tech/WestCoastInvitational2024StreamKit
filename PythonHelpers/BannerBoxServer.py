@@ -7,17 +7,17 @@ from flask_cors import CORS
 app = Flask(__name__)
 CORS(app)  # This will enable CORS for all routes
 
-currentmsg = "yup"
+currentmsg = "Default Server Message"
 
-@app.route('/get')
+@app.route('/GetActiveMessage')
 def get_data():
     return currentmsg
 
-@app.route('/post/<data>')
+@app.route('/UpdateMessageCall/<data>')
 def post_data(data):
     global currentmsg
     currentmsg = data
     return f"Received message: {data}"
 
 if __name__ == '__main__':
-    app.run(port=44444)
+    app.run(port=44444, debug=False)
