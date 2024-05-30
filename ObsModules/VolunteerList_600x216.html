@@ -4,16 +4,39 @@
 <link rel="stylesheet" href="https://use.typekit.net/kof0jzy.css"> <!-- font-family: "articulat-cf", linked to adobe fonts. -->
 <head>
     <style>
-        .slide-in {
-    transform: translateY(10px);
-    opacity: 0;
-}
+        .slide-in1 {
+            transform: translateY(10px);
+            opacity: 0;
+        }
 
-.slide-in.active {
-    transform: translateY(0);
-    opacity: 1;
-    transition: transform 0.5s, opacity 0.5s;
-}
+        .slide-in1.active {
+            transform: translateY(0);
+            opacity: 1;
+            transition: transform 0.5s, opacity 0.5s;
+        }
+
+        .slide-in2 {
+            transform: translateY(20px);
+            opacity: 0;
+        }
+
+        .slide-in2.active {
+            transform: translateY(0);
+            opacity: 1;
+            transition: transform 0.75s, opacity 0.75s;
+        }
+
+        .slide-in3 {
+            transform: translateY(30px);
+            opacity: 0;
+        }
+
+        .slide-in3.active {
+            transform: translateY(0);
+            opacity: 1;
+            transition: transform .9s, opacity .9s;
+        }
+
         .contentbox {
             background-color: white;
             width: 600px;
@@ -26,31 +49,40 @@
             flex-direction: column; /* Add this to stack the elements vertically */
         }
 
-        h1, h2 {
+        h1 {
             font-family: "articulat-cf", sans-serif;
             font-weight: bold;
             margin-top: 10px;
             margin-bottom: 10px;
+            font-size: 48px;
+        }
+
+        h2 {
+            font-family: "articulat-cf", sans-serif;
+            font-weight: bold;
+            margin-top: 10px;
+            margin-bottom: 10px;
+            font-size: 32px;
         }
     </style>
     <title></title>
 </head>
 <body>
     <div class="contentbox">
-        <h1 class="slide-in">1</h1>
-        <h2 class="slide-in">2</h2>
-        <h1 class="slide-in">3</h1>
+        <h1 class="slide-in1">var"Volunteer Job"</h1>
+        <h2 class="slide-in2">var"Volunteer Name"</h2>
+        <h2 class="slide-in3">var"Volunteer Team"</h2>
     </div>
 </body>
 <script src="https://cdn.socket.io/4.2.0/socket.io.min.js"></script>
 <script>
 function triggerSlideIn() {
-    var elements = document.querySelectorAll('.slide-in');
+    var elements = document.querySelectorAll('.slide-in1, .slide-in2, .slide-in3');
     elements.forEach(function(element) {
         element.classList.remove('active');
         setTimeout(function() {
             element.classList.add('active');
-        }, 500);
+        }, 1);
     });
     }
     window.onload = function() {
@@ -61,12 +93,18 @@ function triggerSlideIn() {
             console.log('Connected to server');
         });
         socket.on('active_vols', function(data) {
-            // python returns {"VolPosition": VolPosition, "VolName": VolName, "VolTeamNum": VolTeamNum}
-            document.querySelectorAll('.slide-in')[0].innerText = data.VolPosition;
-            document.querySelectorAll('.slide-in')[1].innerText = data.VolName;
-            document.querySelectorAll('.slide-in')[2].innerText = data.VolTeamNum;
-            triggerSlideIn();
-        });
+    // python returns {"VolPosition": VolPosition, "VolName": VolName, "VolTeamNum": VolTeamNum}
+    document.querySelectorAll('.slide-in1').forEach(function(element) {
+        element.innerText = data.VolPosition;
+    });
+    document.querySelectorAll('.slide-in2').forEach(function(element) {
+        element.innerText = data.VolName;
+    });
+    document.querySelectorAll('.slide-in3').forEach(function(element) {
+        element.innerText = data.VolTeamNum;
+    });
+    triggerSlideIn();
+});
         socket.on('disconnect', function() {
             console.log('Disconnected from server');
         });
