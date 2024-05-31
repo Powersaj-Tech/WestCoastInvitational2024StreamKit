@@ -1,0 +1,42 @@
+
+<button id="updateWinResultRed" class="red-button">Red Wins</button>
+<button id="updateWinResultBlue" class="blue-button">Blue Wins</button>
+<script>
+document.getElementById('updateWinResultRed').addEventListener('click', function() {
+    fetch('http://localhost:4444/UpdateWinResultCall/RED')
+        .then(response => response.json())
+        .then(data => console.log(data));
+});
+document.getElementById('updateWinResultBlue').addEventListener('click', function() {
+    fetch('http://localhost:4444/UpdateWinResultCall/BLUE')
+        .then(response => response.json())
+        .then(data => console.log(data));
+});
+</script>
+
+<style>
+.blue-button {
+    background-color: #587FFF;
+    color: white;
+    border: none;
+    padding: 15px 32px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    margin: 4px 2px;
+    cursor: pointer;
+}
+.red-button {
+    background-color: #FF5858;
+    color: white;
+    border: none;
+    padding: 15px 32px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    margin: 4px 2px;
+    cursor: pointer;
+}
+</style>

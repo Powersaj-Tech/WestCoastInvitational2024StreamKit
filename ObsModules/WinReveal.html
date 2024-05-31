@@ -105,25 +105,24 @@
             console.log('Connected to server');
         });
         socket.on('win_result', function(data) {
-            if (data.WinResult == "true") {
+            {
                 data.WinColor = data.WinColor.toUpperCase();
                 document.querySelector('h1').innerHTML = data.WinColor + "<br> WINS";
                 if (data.WinColor == "BLUE") {
                     document.querySelector('h1').style.color = "#587FFF";
+                    reveal();
                 }
                 else if (data.WinColor == "RED") {
                     document.querySelector('h1').style.color = "#FF5858";
+                    reveal();
                 }
                 else {
                     document.querySelector('h1').style.color = "#000000";
+                    document.querySelector('h1').innerHTML = " ";
                 }
-                reveal();
                 setTimeout(function() {
                     resetreveal();
                 }, 5000);
-            }
-            else {
-                resetreveal();
             }
         });
         socket.on('disconnect', function() {

@@ -105,13 +105,12 @@ def update_vol_position_call(pos, name, team):
     return jsonify({'result': 'Volunteer Position updated', 'VolPosition': VolPosition, 'VolName': VolName,
                     'VolTeamNum': VolTeamNum})
 
-@app.route('/UpdateWinResultCall/<result>/<color>')
-def update_win_result_call(result, color):
+@app.route('/UpdateWinResultCall/<color>')
+def update_win_result_call(color):
     global ActivateWin, WinningTeam
-    ActivateWin = result
     WinningTeam = color
-    socketio.emit('win_result', {'WinResult': ActivateWin, 'WinColor': WinningTeam}, namespace='/GetWinResult')
-    return jsonify({'result': 'Win Result updated', 'WinResult': ActivateWin, 'WinColor': WinningTeam})
+    socketio.emit('win_result', {'WinColor': WinningTeam}, namespace='/GetWinResult')
+    return jsonify({'result': 'Win Result updated', 'WinColor': WinningTeam})
 
 @app.route('/UpdateTeamNumberCall/<team>')
 def update_team_number_call(team):
@@ -140,7 +139,7 @@ def get_active_team():
 @socketio.on('connect', namespace='/GetWinResult')
 def get_win_result():
     print('connected to /GetWinResult')
-    emit('win_result', {'WinResult': ActivateWin, 'WinColor': WinningTeam})
+    emit('win_result', {'WinColor': WinningTeam})
 
 
 if __name__ == '__main__':
