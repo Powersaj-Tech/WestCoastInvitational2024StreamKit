@@ -5,12 +5,14 @@ from flask_cors import CORS
 import eventlet
 import random
 import time
+import threading
+import threading
 
 app = Flask(__name__)
 CORS(app)  # Enable CORS on all routes
 socketio = SocketIO(app, cors_allowed_origins="*")
 
-tps = 60
+tps = 15
 
 active_message = "Initial message"
 counter = 0
@@ -55,13 +57,22 @@ def getPerson():
     return position[str(currentperson)], names[str(currentperson)], teams[str(currentperson)]
 
 
-def background_thread():  # test function that updates the text every ms
-    global counter
+def background_thread():
+    while True:
+        socketio.sleep(3.5)
+        socketio.emit('active_team', {'TeamNumber': str(random.randint(10000, 60000))},
+            namespace='/GetActiveTeam')
+
+def volunteer_thread():
     global VolPosition, VolName, VolTeamNum
     while True:
-        #socketio.sleep(0.001) #1ms
-        socketio.sleep(2 / tps)
-        counter += 1
+        socketio.sleep(5)
+        VolPosition, VolName, VolTeamNum = getPerson()
+        socketio.emit('active_vols', {'VolPosition': VolName, 'VolName': VolPosition, 'VolTeamNum': VolTeamNum},
+            namespace='/GetActiveVols')
+
+def timer_thread():
+    while True:
         countdown = countdowntime - time.time()
         minutes = str(int(countdown / 60))
         seconds = int(countdown % 60)
@@ -70,12 +81,7 @@ def background_thread():  # test function that updates the text every ms
         else:
             seconds = str(seconds)
         socketio.emit('active_message', {'message': minutes + ":" + seconds}, namespace='/GetActiveMessage')
-        if counter % tps == 0:
-            VolPosition, VolName, VolTeamNum = getPerson()
-            socketio.emit('active_vols', {'VolPosition': VolName, 'VolName': VolPosition, 'VolTeamNum': VolTeamNum},
-                          namespace='/GetActiveVols')
-            socketio.emit('active_team', {'TeamNumber': str(random.randint(10000, 60000))},
-                          namespace='/GetActiveTeam')
+        socketio.sleep(1)
 
 
 @app.route('/UpdateMessageCall/<msg>')
@@ -126,4 +132,6 @@ def get_active_team():
 
 if __name__ == '__main__':
     socketio.start_background_task(background_thread)
+    socketio.start_background_task(timer_thread)
+    socketio.start_background_task(volunteer_thread)
     socketio.run(app, port=4444)

@@ -93,11 +93,10 @@ function triggerSlideIn() {
             setTimeout(function() {
                 character.classList.remove('out');
                 character.classList.add('active');
-            }, index * 100);  /* Adjust this value to control the delay between each character */
-            /* then remove the class after 1 second */
+            }, index * 100);
             setTimeout(function() {
                 character.classList.remove('active');
-            }, index * 100 + 1000);  /* Adjust this value to control the duration of the animations */
+            }, index * 100 + 1990);  /* Adjust this value to control the duration of the animations */
             /* then add the out class after a small delay */
             setTimeout(function() {
                 character.classList.add('out');
