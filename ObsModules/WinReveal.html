@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <link rel="stylesheet" href="https://use.typekit.net/kof0jzy.css">
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+        }
+        #box {
+            width: 100vw;
+            height: 100vh;
+            background-color: #ECD999;
+            resize: both;
+            overflow: auto;
+        }
+        img {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+        .sea {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            transition: transform .9s, opacity .9s;
+        }
+        .sea.active {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-120%, -50%);
+            transition: transform 3s, opacity .9s;
+        }
+        .ball {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            transform: rotate(80deg);
+            transition: transform 4s, opacity 1.5s, rotate 1.5s;
+        }
+        .ball.active {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: rotate(120deg);
+            transform: translate(-220%, -40%);
+            transition: transform 2.6s, opacity 2s, rotate 1.5s;
+        }
+        h1 {
+    font-family: "articulat-heavy-cf", sans-serif;
+    font-weight: 1900;
+    font-style: italic;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    font-size: 380px;
+    text-align: left;
+    position: absolute;
+    line-height: 280px;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -45%);
+}
+    </style>
+</head>
+<body>
+    <div id="box">
+        <h1>BLANK <br> WINS </h1>
+        <img class="sea" src="Win_Sea.png" alt="">
+        <img class="ball" src="Win_Water.png" alt="">
+        <img class="ball" src="Win_Ball.png" alt="">
+    </div>
+</body>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.1/socket.io.min.js"></script>
+<script>
+    function reveal() {
+        var sea = document.getElementsByClassName("sea");
+        for (var i = 0; i < sea.length; i++) {
+            sea[i].classList.add("active");
+        }
+        var ball = document.getElementsByClassName("ball");
+        for (var i = 0; i < ball.length; i++) {
+            ball[i].classList.add("active");
+        }
+    }
+
+    function resetreveal() {
+        var sea = document.getElementsByClassName("sea");
+        for (var i = 0; i < sea.length; i++) {
+            sea[i].classList.remove("active");
+        }
+        var ball = document.getElementsByClassName("ball");
+        for (var i = 0; i < ball.length; i++) {
+            ball[i].classList.remove("active");
+        }
+    }
+
+    window.onload = function() {
+        var socket = io.connect('http://localhost:4444/GetWinResult');
+        socket.on('connect', function() {
+            console.log('Connected to server');
+        });
+        socket.on('win_result', function(data) {
+            if (data.WinResult == "true") {
+                data.WinColor = data.WinColor.toUpperCase();
+                document.querySelector('h1').innerHTML = data.WinColor + "<br> WINS";
+                if (data.WinColor == "BLUE") {
+                    document.querySelector('h1').style.color = "#587FFF";
+                }
+                else if (data.WinColor == "RED") {
+                    document.querySelector('h1').style.color = "#FF5858";
+                }
+                else {
+                    document.querySelector('h1').style.color = "#000000";
+                }
+                reveal();
+                setTimeout(function() {
+                    resetreveal();
+                }, 5000);
+            }
+            else {
+                resetreveal();
+            }
+        });
+        socket.on('disconnect', function() {
+            console.log('Disconnected from server');
+        });
+    }
+</script>
+</html>

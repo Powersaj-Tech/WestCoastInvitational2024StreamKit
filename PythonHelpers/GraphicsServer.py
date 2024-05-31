@@ -20,6 +20,8 @@ VolPosition = "VolPosition"
 VolName = "VolName"
 VolTeamNum = "VolTeamNum"
 TeamNum = "TeamNum"
+WinningTeam = "WinningTeam" # Red or Blue
+ActivateWin = "false"
 countdowntime = time.time() + 1210
 
 names = {
@@ -103,6 +105,13 @@ def update_vol_position_call(pos, name, team):
     return jsonify({'result': 'Volunteer Position updated', 'VolPosition': VolPosition, 'VolName': VolName,
                     'VolTeamNum': VolTeamNum})
 
+@app.route('/UpdateWinResultCall/<result>/<color>')
+def update_win_result_call(result, color):
+    global ActivateWin, WinningTeam
+    ActivateWin = result
+    WinningTeam = color
+    socketio.emit('win_result', {'WinResult': ActivateWin, 'WinColor': WinningTeam}, namespace='/GetWinResult')
+    return jsonify({'result': 'Win Result updated', 'WinResult': ActivateWin, 'WinColor': WinningTeam})
 
 @app.route('/UpdateTeamNumberCall/<team>')
 def update_team_number_call(team):
@@ -110,7 +119,6 @@ def update_team_number_call(team):
     TeamNum = team
     socketio.emit('active_team', {'TeamNumber': TeamNum}, namespace='/GetActiveTeam')
     return jsonify({'result': 'Team Number updated', 'TeamNumber': TeamNum})
-
 
 @socketio.on('connect', namespace='/GetActiveMessage')
 def get_active_message():
@@ -128,6 +136,11 @@ def get_active_vols():
 def get_active_team():
     print('connected to /GetActiveTeam')
     emit('active_team', {'TeamNumber': TeamNum})
+
+@socketio.on('connect', namespace='/GetWinResult')
+def get_win_result():
+    print('connected to /GetWinResult')
+    emit('win_result', {'WinResult': ActivateWin, 'WinColor': WinningTeam})
 
 
 if __name__ == '__main__':
