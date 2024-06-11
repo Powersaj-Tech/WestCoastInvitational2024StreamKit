@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<!-- width: 600, height: 216 -->
+<html lang="en">
+<link rel="stylesheet" href="https://use.typekit.net/kof0jzy.css"> <!-- font-family: "articulat-cf", linked to adobe fonts. -->
+<head>
+    <style>
+        .slide-in1 {
+            transform: translateY(10px);
+            opacity: 0;
+            transition: transform 0.25s, opacity 0.25s;
+        }
+
+        .slide-in1.active {
+            transform: translateY(0);
+            opacity: 1;
+            transition: transform 0.5s, opacity 0.5s;
+        }
+
+        .slide-in2 {
+            transform: translateY(20px);
+            opacity: 0;
+            transition: transform 0.25s, opacity 0.25s;
+        }
+
+        .slide-in2.active {
+            transform: translateY(0);
+            opacity: 1;
+            transition: transform 0.75s, opacity 0.75s;
+        }
+
+        .slide-in3 {
+            transform: translateY(10px);
+            opacity: 0;
+            transition: transform .25s, opacity .25s;
+        }
+
+        .slide-in3.active {
+            transform: translateY(-10px);
+            opacity: 1;
+            transition: transform .9s, opacity .9s;
+        }
+
+        .contentbox {
+            background-color: white;
+            width: 600px;
+            height: 216px;
+            transform: scale(1);
+            transform-origin: top left;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column; /* Add this to stack the elements vertically */
+        }
+
+        h1 {
+            font-family: "articulat-cf", sans-serif;
+            font-weight: bold;
+            margin-top: 10px;
+            margin-bottom: 10px;
+            font-size: 48px;
+        }
+
+        h2 {
+            font-family: "articulat-cf", sans-serif;
+            font-weight: bold;
+            margin-top: 10px;
+            margin-bottom: 10px;
+            font-size: 32px;
+        }
+    </style>
+    <title></title>
+</head>
+<body>
+    <div class="contentbox">
+        <h1 class="slide-in1">var"Volunteer Job"</h1>
+        <h2 class="slide-in2">var"Volunteer Name"</h2>
+        <h2 class="slide-in3">var"Volunteer Team"</h2>
+    </div>
+</body>
+<script src="https://cdn.socket.io/4.2.0/socket.io.min.js"></script>
+<script>
+    function triggerSlideIn() {
+        var elements = document.querySelectorAll('.slide-in1, .slide-in2, .slide-in3');
+        elements.forEach(function(element) {
+            element.classList.remove('active');
+            setTimeout(function() {
+                element.classList.add('active');
+            }, 1);
+            setTimeout(function() {
+                element.classList.remove('active');
+            }, 4500);
+        });
+    }
+    
+    window.onload = function() {
+        triggerSlideIn();
+        var volunteerJobs = ['Job 1', 'Job 2', 'Job 3', 'Job 4', 'Job 5'];
+        var volunteerNames = ['Name 1', 'Name 2', 'Name 3', 'Name 4', 'Name 5'];
+        var volunteerTeams = ['Team 1', 'Team 2', 'Team 3', 'Team 4', 'Team 5'];
+    
+        var jobIndex = 0;
+        var nameIndex = 0;
+        var teamIndex = 0;
+    
+        // every 5 seconds, trigger the slide in animation, and update the text
+        setInterval(function() {
+            triggerSlideIn();
+            document.querySelector('.slide-in1').innerText = volunteerJobs[jobIndex % volunteerJobs.length];
+            document.querySelector('.slide-in2').innerText = volunteerNames[nameIndex % volunteerNames.length];
+            document.querySelector('.slide-in3').innerText = volunteerTeams[teamIndex % volunteerTeams.length];
+    
+            jobIndex++;
+            nameIndex++;
+            teamIndex++;
+    
+            if (jobIndex >= volunteerJobs.length) jobIndex = 0;
+            if (nameIndex >= volunteerNames.length) nameIndex = 0;
+            if (teamIndex >= volunteerTeams.length) teamIndex = 0;
+        }, 5000);
+    };
+    </script>
+    </html>

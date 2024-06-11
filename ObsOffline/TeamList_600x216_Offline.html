@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<!-- width: 600, height: 216 -->
+<html lang="en">
+<link rel="stylesheet" href="https://use.typekit.net/kof0jzy.css"> <!-- font-family: "articulat-cf", linked to adobe fonts. -->
+<head>
+    <style>
+
+
+        .slide-in4 {
+            transform: translateY(30px);
+            opacity: 0;
+            transition: opacity 1s, transform 1s;
+        }
+
+        .slide-in4.active {
+            opacity: 1;
+            transform: translateY(0);
+            transition: opacity 1s, transform 1s;
+        }
+
+        .contentbox {
+            background-color: white;
+            width: 600px;
+            height: 216px;
+            transform: scale(1);
+            transform-origin: top left;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column; /* Add this to stack the elements vertically */
+        }
+
+        .contentbox span {
+            display: inline-block;
+            animation: slide-in 0.5s forwards;
+        }
+
+        @keyframes slide-in {
+            from {
+                transform: translateY(-20px);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        h1 {
+            font-family: "articulat-cf", sans-serif;
+            font-weight: bold;
+            margin-top: 10px;
+            margin-bottom: 10px;
+            font-size: 48px;
+            align-content: center;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+        }
+
+        h2 {
+            font-family: "articulat-cf", sans-serif;
+            font-weight: bold;
+            margin-top: 10px;
+            margin-bottom: 10px;
+            font-size: 32px;
+        }
+
+        .animated-character {
+            display: inline-block;  /* This is necessary for the transform property to work */
+            opacity: 1;
+        }
+        .animated-character.up {
+            transform: translateY(20px);  /* Adjust this value to control the distance of the slide */
+            transition: transform 0.5s, opacity 0.5s;  /* Adjust these values to control the duration of the animations */
+        }
+        .animated-character.down {
+            transform: translateY(-20px);  /* Adjust this value to control the distance of the slide */
+            transition: transform 0.5s, opacity 0.5s;  /* Adjust these values to control the duration of the animations */
+        }
+    </style>
+    <title></title>
+</head>
+<body>
+    <div class="contentbox">
+        <h1 class="slide-in4" id="teamNumber" style="font-size: 110px; margin-top: 20px;"></h1>
+    </div>
+</body>
+<script src="https://cdn.socket.io/4.2.0/socket.io.min.js"></script>
+<script>
+    function triggerSlideIn() {
+        var elements = document.getElementsByClassName('slide-in4');
+        for (let i = 0; i < elements.length; i++) {
+            elements[i].classList.add('active');
+        }
+    }
+
+    function triggerSlideOut() {
+        // delay the slide out animation
+        setTimeout(function() {
+            var elements = document.getElementsByClassName('slide-in4');
+            for (let i = 0; i < elements.length; i++) {
+                elements[i].classList.remove('active');
+            }
+        }, 2000);
+    }
+    
+    window.onload = function() {
+    var teamNumbers = ['Team 1', 'Team 2', 'Team 3', 'Team 4', 'Team 5'];
+    var teamIndex = 0;
+
+    // Update the team number
+    setInterval(function() {
+        var teamName = teamNumbers[teamIndex];
+        var teamNumberElement = document.getElementById('teamNumber');
+        teamNumberElement.innerHTML = '';
+
+        // Split the team name into individual characters
+        for (let i = 0; i < teamName.length; i++) {
+            var characterSpan = document.createElement('span');
+            characterSpan.innerText = teamName[i];
+            characterSpan.className = 'slide-in4';
+            characterSpan.style.animationDelay = (i * 0.1) + 's';  // Add a delay based on the index
+            teamNumberElement.appendChild(characterSpan);
+        }
+
+        teamIndex = (teamIndex + 1) % teamNumbers.length;
+        triggerSlideIn();
+        triggerSlideOut();
+    }, 3000);
+};
+</script>
